@@ -1,10 +1,4 @@
-
-
 # See http://help.github.com/ignore-files/ for more about ignoring files.
-
-# .NET Core Project
-bin
-obj
 
 # compiled output
 /dist
@@ -14,7 +8,7 @@ obj
 /bazel-out
 
 # dependencies
-node_modules
+/node_modules
 
 # profiling files
 chrome-profiler-events*.json
@@ -30,7 +24,6 @@ speed-measure-plugin*.json
 *.sublime-workspace
 
 # IDE - VSCode
-.vs
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
