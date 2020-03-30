@@ -7,7 +7,7 @@ namespace ProAgil.Domain
         public string URL { get; set; }
         public int? EventoId { get; set; }//Chave Estrangeira do Banco de dados
         public int? PalestranteId { get; set; }//Chave Estrangeira do Banco de dados
-        public Palestrante Palestrante { get; set; }
-        public Evento Evento { get; set; }
+        public Palestrante Palestrante { get; }
+        public Evento Evento { get; }
     }
 }
