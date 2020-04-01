@@ -79,7 +79,7 @@ namespace ProAgil.Repository
         public async Task<Palestrante[]> GetAllPalestranteAsyncByNome(string nome,bool includeEventos= false)
         {
                  IQueryable<Palestrante> query = _context.Palestrantes
-                .Include(c => c.RedeSociais);
+                .Include(c => c.RedesSociais);
                 if(includeEventos){
                     query = query
                     .Include(pe => pe.PalestranteEventos)
@@ -94,7 +94,7 @@ namespace ProAgil.Repository
         public async Task<Palestrante> GetAllPalestranteAsync(int PalestranteId, bool includeEventos = false)
         {
                 IQueryable<Palestrante> query = _context.Palestrantes
-                .Include(c => c.RedeSociais);
+                .Include(c => c.RedesSociais);
                 if(includeEventos){
                     query = query
                     .Include(pe => pe.PalestranteEventos)
