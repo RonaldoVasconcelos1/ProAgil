@@ -16,10 +16,10 @@ namespace ProAgil.Repository.Migrations
                     Local = table.Column<string>(nullable: true),
                     DataEvento = table.Column<DateTime>(nullable: false),
                     Tema = table.Column<string>(nullable: true),
+                    QtdPessoas = table.Column<int>(nullable: false),
                     ImagemURL = table.Column<string>(nullable: true),
                     Telefone = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    QtdPessoas = table.Column<int>(nullable: false)
+                    Email = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,6 +83,12 @@ namespace ProAgil.Repository.Migrations
                         principalTable: "Eventos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_palestranteEventos_Palestrantes_PalestranteId",
+                        column: x => x.PalestranteId,
+                        principalTable: "Palestrantes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -117,6 +123,11 @@ namespace ProAgil.Repository.Migrations
                 name: "IX_Lotes_EventoId",
                 table: "Lotes",
                 column: "EventoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_palestranteEventos_PalestranteId",
+                table: "palestranteEventos",
+                column: "PalestranteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RedeSociais_EventoId",

@@ -9,7 +9,7 @@ using ProAgil.Repository;
 namespace ProAgil.Repository.Migrations
 {
     [DbContext(typeof(ProAgilContext))]
-    [Migration("20200327045454_init")]
+    [Migration("20200404212904_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,6 +94,8 @@ namespace ProAgil.Repository.Migrations
 
                     b.HasKey("EventoId", "PalestranteId");
 
+                    b.HasIndex("PalestranteId");
+
                     b.ToTable("palestranteEventos");
                 });
 
@@ -121,7 +123,7 @@ namespace ProAgil.Repository.Migrations
 
             modelBuilder.Entity("ProAgil.Domain.Lote", b =>
                 {
-                    b.HasOne("ProAgil.Domain.Evento", "Envento")
+                    b.HasOne("ProAgil.Domain.Evento", "Evento")
                         .WithMany("Lotes")
                         .HasForeignKey("EventoId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -133,16 +135,21 @@ namespace ProAgil.Repository.Migrations
                         .WithMany("PalestrantesEventos")
                         .HasForeignKey("EventoId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ProAgil.Domain.Palestrante", "Palestrante")
+                        .WithMany("PalestranteEventos")
+                        .HasForeignKey("PalestranteId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ProAgil.Domain.RedeSocial", b =>
                 {
-                    b.HasOne("ProAgil.Domain.Evento", "Evento")
-                        .WithMany("RedeSociais")
+                    b.HasOne("ProAgil.Domain.Evento")
+                        .WithMany("RedesSociais")
                         .HasForeignKey("EventoId");
 
-                    b.HasOne("ProAgil.Domain.Palestrante", "Palestrante")
-                        .WithMany("RedeSocial")
+                    b.HasOne("ProAgil.Domain.Palestrante")
+                        .WithMany("RedesSociais")
                         .HasForeignKey("PalestranteId");
                 });
 #pragma warning restore 612, 618
