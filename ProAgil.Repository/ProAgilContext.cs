@@ -11,8 +11,8 @@ namespace ProAgil.Repository
               public DbSet<Evento> Eventos {get; set;}
               public DbSet<Palestrante> Palestrantes {get; set;}
               public DbSet<PalestranteEvento> palestranteEventos {get; set;}
-              public DbSet<RedeSocial> RedeSociais {get; set;}
               public DbSet<Lote> Lotes {get; set;}
+              public DbSet<RedeSocial> RedesSociais {get; set;}
 
                 //esse metodo esta falando para o entity que o evento e palestranteID são primary key
               protected override void OnModelCreating(ModelBuilder modelBuilder){

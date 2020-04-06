@@ -16,5 +16,4 @@ export interface Evento {
      lote: Lote[];
      redesSociais: RedeSocial[];
      palestranteEvento: Palestrante[];
-    
 }

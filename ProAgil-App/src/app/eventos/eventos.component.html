@@ -26,16 +26,16 @@
     <tr *ngFor="let evento of eventosFiltrados">
       <td>
         <img *ngIf="mostarImagem"
-         src="http://localhost:5000/img/{{evento.imagemUrl}}"
+         src="http://localhost:5000/img/{{evento.imagemURL}}"
         [style.width.px]="imagemLargura"
         [style.margin.px] = "imagemMargem">
       </td>
-      <td>{{evento.eventoId}}</td>
+      <td>{{evento.id}}</td>
       <td>{{evento.tema}}</td>
       <td>{{evento.local}}</td>
       <td>{{evento.dataEvento}}</td>
       <td>{{evento.qtdPessoas}}</td>
-      <td>{{evento.lote | uppercase}}</td>
+      <td>{{evento.lotes}}</td>
       <td>
         <button class="btn btn-success"></button>
         <button class="btn btn-danger"></button>
