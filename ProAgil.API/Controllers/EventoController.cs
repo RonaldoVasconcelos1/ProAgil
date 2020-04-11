@@ -85,7 +85,7 @@ namespace ProAgil.API.Controllers
 
                 if(await _repo.SaveChangesAsync()) {
 
-                    return Created("$/api/evento/{model.Id}", model);
+                    return Created($"/api/evento/{model.Id}", model);
                 }
 
 

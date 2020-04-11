@@ -1,54 +1,122 @@
-<div  class="form-inline">
+<div class="form-inline">
   <div class="form-group mb-2">
-    <b><label class="mr-2">Filtro</label></b> <input type="text" class="form-control mr-2" placeholder="Buscar" [(ngModel)]="filtroLista">
+    <label class="mr-2">Filtro </label>
+    <input type="text" class="form-control mr-2"
+    [(ngModel)]="filtroLista">
   </div>
 </div>
 <h3>Filtro: {{filtroLista}}</h3>
 <table class="table table-striped">
-  <thead class="thead-light">
+  <thead class="thead-dark">
     <tr>
-      <th>
-        <button class="btn btn-primary"
-        (click)="alternarImagenm()" >
-          Mostrar Imagem
-        </button>
-      </th>
-      <th>#</th>
-      <th>Tema</th>
-      <th>Local</th>
-      <th>Data</th>
-      <th>Quantidade de Pessoas</th>
-      <th>Lote</th>
-      <th>Opções</th>
+      <th><button class="btn btn-outline-primary"
+        (click)="alternarImagem()">
+         <i class="{{mostarImagem ? 'fa fa-eye-slash' : 'fa fa-eye'}}"></i></button></th>
+      <th>ID</th>
+      <th>TEMA</th>
+      <th>LOCAL</th>
+      <th>DATA</th>
+      <th>QDT PESSOAS</th>
+      <th>LOTE</th>
+      <th>OPÇÕES</th>
     </tr>
   </thead>
   <tbody *ngIf="eventos && eventos.length">
     <tr *ngFor="let evento of eventosFiltrados">
       <td>
         <img *ngIf="mostarImagem"
-         src="http://localhost:5000/img/{{evento.imagemURL}}"
+        src="http://localhost:5000/img/{{evento.imagemURL}}"
         [style.width.px]="imagemLargura"
-        [style.margin.px] = "imagemMargem">
-      </td>
-      <td>{{evento.id}}</td>
+        [style.margin.px]="imagemMargem"> </td>
+      <td></td>
       <td>{{evento.tema}}</td>
       <td>{{evento.local}}</td>
-      <td>{{evento.dataEvento}}</td>
+      <td>{{evento.dataEvento | DateTimeFormatPipe}}</td>
       <td>{{evento.qtdPessoas}}</td>
-      <td>{{evento.lotes}}</td>
       <td>
-        <button class="btn btn-success"></button>
-        <button class="btn btn-danger"></button>
+        <div *ngIf="evento.lotes.length">
+          {{evento.lotes[0].nome}}
+        </div>
+        <div *ngIf="!evento.lotes.length">
+          Não Informado
+        </div>
       </td>
+      <td>
+        <div class="btn-group">
+          <button class=" btn btn-sm btn-primary" 
+          tooltip="Editar" (click)="openModal(template)">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button class=" btn btn-sm btn-danger" tooltip="Exlcuir">
+            <i class="fa fa-eraser"></i>
+          </button>
+        </div>
+      </td>
+
     </tr>
   </tbody>
-  <tfoot *ngIf="!eventos.length">
-    <tr>
-      <td colspan="7" class="text-center">
-        <h5>
-          Nenhum evento encontrado!
-        </h5>
-      </td>
-    </tr>
-  </tfoot>
 </table>
+
+ 
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modal</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    This is a modal.
+  </div>
+</ng-template>
+
+<form [formGroup]="registerForm">
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <label>Tema</label>
+      <input type="text" class="form-control is-invalid" formControlName="tema">
+      <div class="invalid-feedback">
+        O tema é Obrigatorio
+      </div>
+    </div>
+  </div>  
+  <div class="form-row">
+    <div class="form-group col-md-8">
+      <label>Local</label>
+      <input type="text" class="form-control" formControlName="local">
+    </div>
+    <div class="form-group col-md-4">
+      <label>Data e Hora</label>
+      <input type="text" class="form-control" formControlName="dataEvento">
+    </div>
+  </div>  
+  <div class="form-row">
+    <div class="form-group col-md-3">
+      <label>Qtd Pessoas</label>
+      <input type="text" class="form-control" formControlName="qtdPessoas">
+    </div>
+    <div class="form-group col-md-9">
+      <label>Imagem</label>
+      <input type="text" class="form-control" formControlName="imagemURL">
+    </div>
+  </div>  
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label>Telefone</label>
+      <input type="text" class="form-control" formControlName="telefone">
+    </div>
+    <div class="form-group col-md-8">
+      <label>Email</label>
+      <input type="text" class="form-control" formControlName="email">
+    </div>
+  </div> 
+</form>
+<br>
+<button class="btn btn-secondary" (click)="openModal(template)">
+  Fechar
+</button>
+<button class="btn btn-primary" (click)="salvarAlteracao()">
+  Salvar Alterações
+</button>
+<br>
+<br>

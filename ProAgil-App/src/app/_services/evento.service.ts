@@ -10,7 +10,7 @@ export class EventoService {
 
 constructor(private http: HttpClient) { }
 
-  BaseURL = 'http://localhost:5000/api/values';
+  BaseURL = 'http://localhost:5000/api/evento';
 
   getAllEventos(): Observable<Evento[]> {
 
