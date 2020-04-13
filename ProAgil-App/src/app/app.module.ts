@@ -15,6 +15,7 @@ import { EventosComponent } from './eventos/eventos.component';
 import { NavComponent } from './nav/nav.component';
 
 import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 
 @NgModule({
@@ -22,12 +23,13 @@ import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
       AppComponent,
       EventosComponent,
       NavComponent,
-      DateTimeFormatPipePipe
+      DateTimeFormatPipePipe,
    ],
    imports: [
       BrowserModule,
       BsDropdownModule.forRoot(),
       ModalModule.forRoot(),
+      BsDatepickerModule.forRoot(),
       TooltipModule.forRoot(),
       AppRoutingModule,
       HttpClientModule,
@@ -38,7 +40,8 @@ import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
    providers: [EventoService],
    bootstrap: [
       AppComponent,
-      BrowserAnimationsModule
+      BrowserAnimationsModule,
+      BsDatepickerModule
    ]
 })
 export class AppModule { }

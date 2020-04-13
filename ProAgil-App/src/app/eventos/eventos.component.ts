@@ -3,8 +3,11 @@ import { Evento } from '../_models/Evento';
 import { EventoService } from '../_services/evento.service';
 
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
+import { defineLocale, ptBrLocale, } from 'ngx-bootstrap/chronos';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+defineLocale('pt-br', ptBrLocale);
 @Component({
   selector: 'app-eventos',
   templateUrl: './eventos.component.html',
@@ -23,7 +26,10 @@ export class EventosComponent implements OnInit {
   registerForm: FormGroup;
   maxPessoas = 12000;
 
-  constructor(private eventoService: EventoService, private modalService: BsModalService) { }
+  constructor(private eventoService: EventoService, private modalService: BsModalService, private fb: FormBuilder, private localeService:
+     BsLocaleService) {
+       this.localeService.use('pt-br');
+     }
 
   get filtroLista(): string {
     return this._filtroLista;
@@ -49,17 +55,18 @@ salvarAlteracao() {
 
 }
 validation() {
-  this.registerForm = new FormGroup({
-    tema: new FormControl('',
-     [Validators.required, Validators.minLength(4), Validators.maxLength(60)]),
-    local: new FormControl('', Validators.required),
-    dataEvento: new FormControl('', Validators.required),
-    imagemURL: new FormControl('', Validators.required),
-    qtdPessoas: new FormControl('',
-    [Validators.required, Validators.max(120000)]),
-    telefone: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email])
+  this.registerForm = this.fb.group({
+
+    tema: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(60)]],
+    local: ['', Validators.required],
+    dataEvento: ['', Validators.required],
+    imagemURL: ['', Validators.required],
+    qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
+    telefone: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]]
+
   });
+
 }
 
   getEventos() {
