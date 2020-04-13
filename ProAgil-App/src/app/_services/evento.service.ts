@@ -22,4 +22,8 @@ constructor(private http: HttpClient) { }
   getEventosById(id: number): Observable<Evento> {
     return this.http.get<Evento>(`${this.BaseURL}/${id}`);
   }
+
+  postEvento(evento: Evento): Observable<Evento> {
+    return this.http.post<Evento>(this.BaseURL, evento);
+  }
 }
