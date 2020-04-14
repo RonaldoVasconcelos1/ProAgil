@@ -26,6 +26,8 @@ export class EventosComponent implements OnInit {
   mostarImagem = false;
   registerForm: FormGroup;
   maxPessoas = 12000;
+  modoSalvar = '';
+  bodyDeletarEvento = '';
 
   constructor(private eventoService: EventoService, private modalService: BsModalService, private fb: FormBuilder, private localeService:
     BsLocaleService) {
@@ -54,16 +56,29 @@ export class EventosComponent implements OnInit {
       }
       salvarAlteracao(template: any) {
         if (this.registerForm.valid) {
-          this.evento = Object.assign({}, this.registerForm.value);
-          this.eventoService.postEvento(this.evento).subscribe(
-            (novoEvento: Evento) => {
-              console.log(novoEvento);
-              template.hide();
-              this.getEventos();
-            }, error => {
-              console.log(error);
-            }
-          );
+          if (this.modoSalvar === 'post') {
+
+            this.evento = Object.assign({}, this.registerForm.value);
+            this.eventoService.postEvento(this.evento).subscribe(
+              (novoEvento: Evento) => {
+                template.hide();
+                this.getEventos();
+              }, error => {
+                console.log(error);
+              }
+            );
+
+          } else {
+            this.evento = Object.assign({id : this.evento.id}, this.registerForm.value);
+            this.eventoService.putEvento(this.evento).subscribe(
+              () => {
+                template.hide();
+                this.getEventos();
+              }, error => {
+                console.log(error);
+              }
+            );
+          }
       }
     }
       validation() {
@@ -93,6 +108,34 @@ export class EventosComponent implements OnInit {
         }
         alternarImagem() {
           this.mostarImagem = !this.mostarImagem;
+        }
+
+        novoEvento(template: any) {
+          this.modoSalvar = 'post';
+          this.openModal(template);
+        }
+
+        editarEvento(evento: Evento, template: any) {
+          this.modoSalvar = 'put';
+          this.openModal(template);
+          this.evento = evento;
+          this.registerForm.patchValue(evento);
+        }
+        excluirEvento(evento: Evento, template: any) {
+          this.openModal(template);
+          this.evento = evento;
+          this.bodyDeletarEvento = `Tem certeza que deseja excluir o Evento: ${evento.tema}, Código: ${evento.tema}`;
+        }
+
+        confirmeDelete(template: any) {
+          this.eventoService.deleteEvento(this.evento.id).subscribe(
+            () => {
+                template.hide();
+                this.getEventos();
+              }, error => {
+                console.log(error);
+              }
+          );
         }
         openModal(template: any) {
           this.registerForm.reset();
