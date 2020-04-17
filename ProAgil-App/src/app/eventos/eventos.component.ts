@@ -2,12 +2,13 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Evento } from '../_models/Evento';
 import { EventoService } from '../_services/evento.service';
 
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { defineLocale, ptBrLocale, } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { templateJitUrl } from '@angular/compiler';
+import { ToastrService } from 'ngx-toastr';
+
 defineLocale('pt-br', ptBrLocale);
 @Component({
   selector: 'app-eventos',
@@ -30,7 +31,8 @@ export class EventosComponent implements OnInit {
   bodyDeletarEvento = '';
 
   constructor(private eventoService: EventoService, private modalService: BsModalService, private fb: FormBuilder, private localeService:
-    BsLocaleService) {
+    // tslint:disable-next-line: align
+    BsLocaleService, private toastr: ToastrService) {
       this.localeService.use('pt-br');
     }
 
@@ -63,8 +65,9 @@ export class EventosComponent implements OnInit {
               (novoEvento: Evento) => {
                 template.hide();
                 this.getEventos();
+                this.toastr.success('Inserido com sucesso !');
               }, error => {
-                console.log(error);
+               this.toastr.error(`Erro ao tentar salvar ${error}`);
               }
             );
 
@@ -72,10 +75,12 @@ export class EventosComponent implements OnInit {
             this.evento = Object.assign({id : this.evento.id}, this.registerForm.value);
             this.eventoService.putEvento(this.evento).subscribe(
               () => {
-                template.hide();
                 this.getEventos();
+                template.hide();
+                this.toastr.success('Editado com sucesso !');
+
               }, error => {
-                console.log(error);
+               this.toastr.error(`Erro ao tentar salvar ${error}`);
               }
             );
           }
@@ -130,10 +135,11 @@ export class EventosComponent implements OnInit {
         confirmeDelete(template: any) {
           this.eventoService.deleteEvento(this.evento.id).subscribe(
             () => {
-                template.hide();
-                this.getEventos();
+               template.hide();
+               this.getEventos();
+               this.toastr.success('Deletado com sucesso !');
               }, error => {
-                console.log(error);
+               this.toastr.error(`Erro ao Deletar ${error}`);
               }
           );
         }

@@ -60,9 +60,17 @@
             </button>
           </div>
         </td>
-        
       </tr>
     </tbody>
+    <tfoot *ngIf="!eventos">
+      <tr>
+        <td colspan="7" class="text-center">
+          <h4>
+              Nenhum Evento Encontrado
+          </h4>
+        </td>
+      </tr>
+    </tfoot>
   </table>
   
   

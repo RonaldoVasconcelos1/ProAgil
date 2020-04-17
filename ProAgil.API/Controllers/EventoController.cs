@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System;
 using System.Threading.Tasks;
@@ -5,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProAgil.Domain;
 using ProAgil.Repository;
+using AutoMapper;
+using ProAgil.API.Dtos;
 
 namespace ProAgil.API.Controllers
 {
@@ -13,137 +16,154 @@ namespace ProAgil.API.Controllers
     public class EventoController : ControllerBase
     {
         private readonly IProAgilRepository _repo;
-        public EventoController(IProAgilRepository repo)
+        private readonly IMapper _mapper;
+        public EventoController(IProAgilRepository repo, IMapper mapper)
         {
+            _mapper = mapper;
             _repo = repo;
 
         }
 
-         [HttpGet]
+        [HttpGet]
         public async Task<ActionResult> Get()
         {
-        
+
             try
             {
-                var results = await _repo.GetAllEventoAsync(true);
+                var eventos = await _repo.GetAllEventoAsync(true);
+
+                var results = _mapper.Map<IEnumerable<EventoDto>>(eventos);
 
                 return Ok(results);
 
             }
             catch (System.Exception)
             {
-                
-               return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
             }
-        
+
 
         }
 
         [HttpGet("{EventoId}")]
         public async Task<ActionResult> Get(int EventoId)
         {
-        
+
             try
             {
-                var results = await _repo.GetEventosAsyncById(EventoId, true);
+                var evento  = await _repo.GetEventosAsyncById(EventoId, true);
+
+                var results = _mapper.Map<EventoDto>(evento);
 
                 return Ok(results);
 
             }
             catch (System.Exception)
             {
-                
-               return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
             }
         }
-         [HttpGet("getByTema/{Tema}")]
+        [HttpGet("getByTema/{Tema}")]
         public async Task<ActionResult> Get(string Tema)
         {
-        
+
             try
             {
-                var results = await _repo.GetAllEventoAsyncByTema(Tema, true);
+                var eventos = await _repo.GetAllEventoAsyncByTema(Tema, true);
+
+                var results = _mapper.Map<IEnumerable<EventoDto>>(eventos);
+
 
                 return Ok(results);
 
             }
             catch (System.Exception)
             {
-                
-               return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
             }
         }
 
-         [HttpPost]
-        public async Task<ActionResult> Post(Evento model)
-        {
-        
-            try
-            {
-
-                _repo.Add(model);
-
-                if(await _repo.SaveChangesAsync()) {
-
-                    return Created($"/api/evento/{model.Id}", model);
-                }
-
-
-            }
-            catch (System.Exception)
-            {
-                
-               return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
-            }
-            return BadRequest();
-
-        }
-
-          [HttpPut("{EventoId}")]
-        public async Task<ActionResult> Put(int EventoId, Evento model)
+        [HttpPost]
+        public async Task<ActionResult> Post(EventoDto model)
         {
             
+
             try
             {
-                var evento = await _repo.GetEventosAsyncById(EventoId, false);
-                if(evento == null) return NotFound();
-                _repo.Update(model);
+                var evento = _mapper.Map<Evento>(model);
 
-                if(await _repo.SaveChangesAsync()) {
+                _repo.Add(evento);
 
-                    return Created($"api/evento/{model.Id}", model);
+                if (await _repo.SaveChangesAsync())
+                {
+
+                    return Created($"/api/evento/{model.Id}", _mapper.Map<Evento>(evento));
                 }
 
 
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                
-               return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro no Banco {ex.Message}");
             }
             return BadRequest();
 
         }
 
-         [HttpDelete("{EventoId}")]
+        [HttpPut("{EventoId}")]
+        public async Task<IActionResult> Put(int EventoId, EventoDto model)
+        {
+
+            try
+            {
+                
+                var evento = await _repo.GetEventosAsyncById(EventoId, false);
+                if (evento == null) return NotFound();
+            
+
+                 _mapper.Map(model, evento);
+
+                _repo.Update(evento);
+
+                if (await _repo.SaveChangesAsync())
+                {
+                    return Created($"/api/evento/{model.Id}", _mapper.Map<EventoDto>(evento));
+
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro no Banco {ex.Message}");
+            }
+            return BadRequest();
+
+        }
+
+        [HttpDelete("{EventoId}")]
         public async Task<ActionResult> Delete(int EventoId)
         {
-            
+
             try
             {
-                var evento = await _repo.GetEventosAsyncById(EventoId, false);
-                if(evento == null) return NotFound();
-                _repo.Delete(evento);
+                var eventos = await _repo.GetEventosAsyncById(EventoId, false);
+                if (eventos == null) return NotFound();
+                _repo.Delete(eventos);
 
-                if(await _repo.SaveChangesAsync()) {
+                if (await _repo.SaveChangesAsync())
+                {
 
                     return Ok();
                 }
             }
             catch (System.Exception)
             {
-                
-               return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro no Banco");
             }
             return BadRequest();
 
