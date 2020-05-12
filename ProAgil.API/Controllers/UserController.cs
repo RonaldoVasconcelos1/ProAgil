@@ -3,6 +3,7 @@ using AutoMapper;
 using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProAgil.API.Dtos;
 using ProAgil.Domain.Identity;
 
 namespace ProAgil.API.Controllers
